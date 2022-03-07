@@ -14,7 +14,7 @@ namespace Labb2_LINQ
             
             using LabbDBContext context = new LabbDBContext();
 
-
+            //Lärare som undervisar i matte
             var lärareMatte = (from lärare in context.Lärare
                                join lärareKurs in context.LärareKurs on lärare.LärareId equals lärareKurs.Lärare.LärareId
                                join ÄmneKurs in context.ÄmneKurs on lärareKurs.Kurs.KursId equals ÄmneKurs.Kurs.KursId
@@ -46,6 +46,7 @@ namespace Labb2_LINQ
             //}
 
 
+            //Elever med sina lärare
             var lärarePerElev = (from elev in context.Elever
                                  join elevKurs in context.ElevKurs on elev.ElevId equals elevKurs.Elev.ElevId
                                  join lärareKurs in context.LärareKurs on elevKurs.Kurs.KursId equals lärareKurs.Kurs.KursId
@@ -78,6 +79,57 @@ namespace Labb2_LINQ
             }
 
 
+            //Contains Programmering 1?
+            Console.WriteLine("\nFinns progammering 1 som ämne?");
+            var containsProgrammering1 = context.Ämnen.Select(x => x.Namn).Contains("Programmering 1");
+            if (containsProgrammering1)
+            {
+                Console.WriteLine("Ja");
+            }
+            else
+            {
+                Console.WriteLine("Nej");
+            }
+
+
+            //Ändra programmering 2 till OOP
+            Console.WriteLine("\n");
+            var ä1 = context.Ämnen.FirstOrDefault(x=>x.Namn== "Programmering 2");
+            if (ä1 != null)
+            {
+                ä1.Namn = "OOP";
+                context.Update(ä1);
+                context.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine("Ä1 var null");
+            }
+            Console.WriteLine("\nAlla ämnen:");
+            foreach (var item in context.Ämnen)
+            {
+                Console.WriteLine(item.Namn);
+            }
+
+
+            //Ändra alla med Anas som lärare till Reidar som lärare
+            var lärareAnas = context.Lärare.First(l => l.Förnamn == "Anas");
+            var lärareReidar = context.Lärare.First(l => l.Förnamn == "Reidar");
+
+            var kurserMedAnas = context.LärareKurs.Where(x => x.Lärare == lärareAnas);
+
+            foreach (var item in kurserMedAnas)
+            {
+                item.Lärare = lärareReidar;
+                context.Update(item);
+            }
+            context.SaveChanges();
+
+            Console.WriteLine("\nLärare som har kurser");
+            foreach (var item in context.LärareKurs)
+            {
+                Console.WriteLine(item.Lärare.Förnamn);
+            }
 
 
 
@@ -126,7 +178,12 @@ namespace Labb2_LINQ
             //    Förnamn = "Anna",
             //    Efternamn = "Larsson",
             //};
-            //context.AddRange(new Lärare[3] { l1, l2, l3 });
+            //Lärare l4 = new Lärare()
+            //{
+            //    Förnamn = "Reidar",
+            //    Efternamn = "Qlok",
+            //};
+            //context.AddRange(new Lärare[4] { l1, l2, l3, l4 });
 
 
             //Ämne ä1 = new Ämne()
