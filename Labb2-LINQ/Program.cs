@@ -10,7 +10,6 @@ namespace Labb2_LINQ
         static void Main(string[] args)
         {
 
-            ////Inte klar ännu
             
             using LabbDBContext context = new LabbDBContext();
 
